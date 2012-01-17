@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+Recent Tweets 
+{% endblock %}
+
+{% block content %} 
+    <h1>Recent Tweets</h1>
+    <ul>
+    {% for t in recent_tweets %}
+        <li>
+        {{ t.posted_by }}<br/>
+        {{ t.content }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

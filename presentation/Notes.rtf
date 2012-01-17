@@ -1,0 +1,921 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf230
+{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fmodern\fcharset0 Courier-Bold;\f2\fmodern\fcharset0 Courier-Oblique;
+}
+{\colortbl;\red255\green255\blue255;\red102\green102\blue102;\red186\green33\blue33;\red0\green128\blue0;
+\red0\green0\blue255;\red64\green128\blue128;\red188\green122\blue0;\red25\green23\blue124;\red170\green34\blue255;
+}
+\margl1440\margr1440\vieww14040\viewh16600\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs28 \cf0 \ul \ulc0 Slide\ulnone :  Welcome\
+\
+\ul Slide\ulnone : What is Django?\
+	- MVC-instpired, DRY\
+	- ORM\
+	- Auto-admin (and other contrib apps!)\
+	- Clean URLs\
+	- Template system (not a full language)\
+	- Community (3rd-party apps)\
+\
+\ul Slide\ulnone : Architecture diagram: \
+\
+{\field{\*\fldinst{HYPERLINK "https://docs.google.com/drawings/d/1HuPLnuXSiT2p8wj3Ks4g1JAVCNY_1a32OGDBpVy50sE/edit?authkey=CMqkrvQP&hl=en_US&authkey=CMqkrvQP"}}{\fldrslt https://docs.google.com/drawings/d/1HuPLnuXSiT2p8wj3Ks4g1JAVCNY_1a32OGDBpVy50sE/edit?authkey=CMqkrvQP&hl=en_US&authkey=CMqkrvQP}}\
+\
+\ul Slide\ulnone : Stack Diagram: {\field{\*\fldinst{HYPERLINK "https://docs.google.com/drawings/d/1DrW-4FFBAfChun0vo9jhx-kUiolNljccgIrephtcR04/edit?hl=en_US"}}{\fldrslt \
+https://docs.google.com/drawings/d/1CWaLABOLZ5-_r5xN0IyFbeHn0eapk3TNCbHFvyWh-GQ/edit}}\
+\
+\ul Slide\ulnone : Walkthru \
+	- Quick example of building an app\
+	- Simple, twitter clone (minitweet)\
+\
+\ul Slide\ulnone : Prerequisites\
+	- assume python + django is installed\
+	- Install python: {\field{\*\fldinst{HYPERLINK "http://www.youtube.com/watch?v=L5t5U0XnSew&list=UU44F019qk7CQXt1ufLyUPcg&index=1&feature=plcp"}}{\fldrslt http://youtu.be/L5t5U0XnSew\
+	}}- Install django: http://youtu.be/rIVwVOpwpsA\
+\
+\
+\ul Slide\ulnone : Django Projects\
+- defines an "instance" of django\
+- django options\
+- DB settings, template locations, applications\
+\
+\ul Slide\ulnone : Start a Project \
+	\
+	$ django-admin.py startproject minitweet\
+\
+\ul Slide\ulnone : Project Directory\
+\
+	minitweet/\
+		__init__.py\
+		manage.py\
+		settings.py\
+		urls.py\
+\
+\ul Slide\ulnone :  DB Settings\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 DATABASES \cf2 =\cf0  \{\
+    \cf3 'default'\cf0 : \{\
+        \cf3 'ENGINE'\cf0 : \cf3 'django.db.backends.sqlite3'\cf0 , \
+        \cf3 'NAME'\cf0 : \cf3 'database.db'\cf0 ,\
+        \cf3 'USER'\cf0 : \cf3 ''\cf0 ,\
+        \cf3 'PASSWORD'\cf0 : \cf3 ''\cf0 ,\
+        \cf3 'HOST'\cf0 : \cf3 ''\cf0 ,\
+        \cf3 'PORT'\cf0 : \cf3 ''\cf0 , \
+    \}\
+\}\
+\
+\ul Slide\ulnone : Template Directories\
+- Create a "templates" directory\
+
+\f1\b \cf4 \
+
+\f0\b0 \cf0 \ul Slide\ulnone : Template Directories\
+Specify the templates directory in your settings.py\
+
+\f1\b \cf4 \
+from
+\f0\b0 \cf0  
+\f1\b \cf5 os
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  path\
+_project_path \cf2 =\cf0  path\cf2 .\cf0 dirname(path\cf2 .\cf0 abspath(__file__))\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 # ...
+\f0\i0 \cf0 \
+\
+TEMPLATE_DIRS \cf2 =\cf0  (\
+    path\cf2 .\cf0 join(_project_path, \cf3 "templates"\cf0 ),\
+)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Create an app\
+\
+	$ python manage.py startapp tweets\
+\
+\ul Slide\ulnone : App Directory\
+\
+	tweets/\
+		__init__.py\
+		models.py\
+		tests.py\
+		views.py\
+\
+\ul Slide\ulnone : Installing our app\
+\
+INSTALLED_APPS \cf2 =\cf0  (\
+    \cf3 'django.contrib.auth'\cf0 ,\
+    \cf3 'django.contrib.contenttypes'\cf0 ,\
+    \cf3 'django.contrib.sessions'\cf0 ,\
+    \cf3 'django.contrib.sites'\cf0 ,\
+    \cf3 'django.contrib.messages'\cf0 ,\
+    \cf3 'django.contrib.staticfiles'\cf0 ,\
+    
+\f2\i \cf6 # Uncomment the next line to enable the admin:
+\f0\i0 \cf0 \
+    
+\f2\i \cf6 # 'django.contrib.admin',
+\f0\i0 \cf0 \
+    
+\f2\i \cf6 # Uncomment the next line to enable admin documentation:
+\f0\i0 \cf0 \
+    
+\f2\i \cf6 # 'django.contrib.admindocs',
+\f0\i0 \cf0 \
+    \cf3 'tweets'\cf0 ,\
+)\
+\
+\
+\ul Slide\ulnone : Models\
+
+\f1\b \cf4 \
+from
+\f0\b0 \cf0  
+\f1\b \cf5 django.db
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  models\
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Tweet
+\f0\b0 \cf0 (models\cf2 .\cf0 Model):\
+    content \cf2 =\cf0  models\cf2 .\cf0 CharField(max_length\cf2 =140\cf0 )\
+    posted_on \cf2 =\cf0  models\cf2 .\cf0 DateTimeField(auto_now_add\cf2 =\cf4 True\cf0 )\
+    \
+\ul Slide\ulnone : Adding a User	\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.db
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  models\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.contrib.auth.models
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  User\
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Tweet
+\f0\b0 \cf0 (models\cf2 .\cf0 Model):\
+    content \cf2 =\cf0  models\cf2 .\cf0 CharField(max_length\cf2 =140\cf0 )\
+    posted_on \cf2 =\cf0  models\cf2 .\cf0 DateTimeField(auto_now_add\cf2 =\cf4 True\cf0 )\
+    posted_by \cf2 =\cf0  models\cf2 .\cf0 ForeignKey(User)\
+    \
+\ul Slide\ulnone : Model Representation\
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Tweet
+\f0\b0 \cf0 (models\cf2 .\cf0 Model):\
+    content \cf2 =\cf0  models\cf2 .\cf0 CharField(max_length\cf2 =140\cf0 )\
+    posted_on \cf2 =\cf0  models\cf2 .\cf0 DateTimeField(auto_now_add\cf2 =\cf4 True\cf0 )\
+    posted_by \cf2 =\cf0  models\cf2 .\cf0 ForeignKey(User)\
+\
+    
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 __unicode__\cf0 (\cf4 self\cf0 ):\
+        
+\f1\b \cf4 return
+\f0\b0 \cf0  \cf4 self\cf2 .\cf0 content\
+\
+\ul Slide\ulnone : Model Meta Data\
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Tweet
+\f0\b0 \cf0 (models\cf2 .\cf0 Model):\
+    content \cf2 =\cf0  models\cf2 .\cf0 CharField(max_length\cf2 =140\cf0 )\
+    posted_on \cf2 =\cf0  models\cf2 .\cf0 DateTimeField(auto_now_add\cf2 =\cf4 True\cf0 )\
+    posted_by \cf2 =\cf0  models\cf2 .\cf0 ForeignKey(User)\
+\
+    
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 __unicode__\cf0 (\cf4 self\cf0 ):\
+        
+\f1\b \cf4 return
+\f0\b0 \cf0  \cf4 self\cf2 .\cf0 content\
+\
+    
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Meta
+\f0\b0 \cf0 :\
+        ordering \cf2 =\cf0  [\cf3 '-posted_on'\cf0 ,]\
+        verbose_name \cf2 =\cf0  \cf3 'Tweet'\cf0 \
+        verbose_name_plural \cf2 =\cf0  \cf3 'Tweets'\cf0 \
+\
+\ul Slide\ulnone : syncdb\
+\
+	$ ./manage.py syncdb\
+\
+	- Run when you create new models/install new apps.\
+	- not really a "synchronize". \
+	- won't modify existing models\
+	- FIRST TIME: set up an admin user (remember this!)\
+	- If you want "migrations", use South: {\field{\*\fldinst{HYPERLINK "http://south.aeracode.org/"}}{\fldrslt http://south.aeracode.org/}}\
+\
+\ul Slide\ulnone : URLs\
+	- Root URLConf: minitweet/urls.py\
+	- App URLConf: minitweet/tweets/urls.py\
+	- Map URLs to Views (functions)\
+	- Use Regex to parse URL structure\
+\
+\ul Slide\ulnone : Root URLconf\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.conf.urls.defaults
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  patterns, include, url\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 # Uncomment the next two lines to enable the admin:
+\f0\i0 \cf0 \
+
+\f2\i \cf6 # from django.contrib import admin
+\f0\i0 \cf0 \
+
+\f2\i \cf6 # admin.autodiscover()
+\f0\i0 \cf0 \
+\
+urlpatterns \cf2 =\cf0  patterns(\cf3 ''\cf0 ,\
+    url(\cf3 r'^tweets/'\cf0 , include(\cf3 'tweet.urls'\cf0 )),\
+\
+    
+\f2\i \cf6 # Uncomment the admin/doc line below to enable admin documentation:
+\f0\i0 \cf0 \
+    
+\f2\i \cf6 # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+\f0\i0 \cf0 \
+\
+    
+\f2\i \cf6 # Uncomment the next line to enable the admin:
+\f0\i0 \cf0 \
+    
+\f2\i \cf6 # url(r'^admin/', include(admin.site.urls)),
+\f0\i0 \cf0 \
+)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Enable the admin\
+	- INSTALL the admin app\
+	- Add the admin URLs\
+\
+\ul Slide\ulnone : Root URLconf\
+
+\f1\b \cf4 \
+from
+\f0\b0 \cf0  
+\f1\b \cf5 django.conf.urls.defaults
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  patterns, include, url\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.contrib
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  admin\
+admin\cf2 .\cf0 autodiscover()\
+\
+urlpatterns \cf2 =\cf0  patterns(\cf3 ''\cf0 ,\
+    url(\cf3 r'^tweets/'\cf0 , include(\cf3 'tweets.urls'\cf0 )),\
+    url(\cf3 r'^admin/'\cf0 , include(admin\cf2 .\cf0 site\cf2 .\cf0 urls)),\
+)\
+\
+\
+\ul Slide\ulnone : Install our new app:\
+\
+settings.py\
+\
+INSTALLED_APPS \cf2 =\cf0  (\
+    \cf3 'django.contrib.auth'\cf0 ,\
+    \cf3 'django.contrib.contenttypes'\cf0 ,\
+    \cf3 'django.contrib.sessions'\cf0 ,\
+    \cf3 'django.contrib.sites'\cf0 ,\
+    \cf3 'django.contrib.messages'\cf0 ,\
+    \cf3 'django.contrib.staticfiles'\cf0 ,\
+    \cf3 'django.contrib.admin'\cf0 ,\
+    \cf3 'tweets'\cf0 ,\
+)\
+\
+- Then run ./manage.py syncdb\
+\
+\ul Slide\ulnone : Watching it run!\
+\
+	$ python manage.py runserver\
+	Validating models...\
+\
+	0 errors found\
+	Django version 1.3.1, using settings 'minitweet.settings'\
+	Development server is running at http://127.0.0.1:8000/\
+	Quit the server with CONTROL-C.\
+\
+\ul Slide\ulnone : Admin support for tweets\
+minitweet/tweets/admin.py\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.contrib
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  admin\
+
+\f1\b \cf4 import
+\f0\b0 \cf0  
+\f1\b \cf5 models
+\f0\b0 \cf0 \
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 TweetAdmin
+\f0\b0 \cf0 (admin\cf2 .\cf0 ModelAdmin):\
+    list_display \cf2 =\cf0  (\cf3 'posted_by'\cf0 , \cf3 'posted_on'\cf0 )\
+\
+admin\cf2 .\cf0 site\cf2 .\cf0 register(models\cf2 .\cf0 Tweet, TweetAdmin)\
+\
+\
+\
+\ul Slide\ulnone : App URLconf\
+minitweet/tweets/urls.py\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.conf.urls.defaults
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  patterns, include, url\
+\
+urlpatterns \cf2 =\cf0  patterns(\cf3 'tweets.views'\cf0 ,\
+\
+    url(\cf3 r'^$'\cf0 , \
+        \cf3 'recent_tweets'\cf0 , \
+        name\cf2 =\cf3 'tweets-recent_tweets'\cf0 ),\
+)\
+\
+\ul Slide\ulnone : Views\
+- Just python functions\
+- Arbitrary Logic\
+- Accept an HTTP Request\
+- Return an HTTP Response\
+- Typically render content: HTML, JSON, PDF, CSV, Images, etc\
+\
+\ul Slide\ulnone : Views\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.contrib.auth.models
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  User\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.shortcuts
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  render_to_response\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.template
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  RequestContext\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 models
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  Tweet\
+\
+
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 recent_tweets\cf0 (request):\
+    recent_tweets \cf2 =\cf0  Tweet\cf2 .\cf0 objects\cf2 .\cf0 all()\
+\
+    template_data \cf2 =\cf0  \{\
+        \cf3 'recent_tweets'\cf0 : recent_tweets[:\cf2 10\cf0 ],\
+    \}\
+    template \cf2 =\cf0  \cf3 "tweets/recent_tweets.html"\cf0 \
+    ctx \cf2 =\cf0  RequestContext(request)\
+\
+    
+\f1\b \cf4 return
+\f0\b0 \cf0  render_to_response(\
+        template, \
+        template_data, \
+        context_instance\cf2 =\cf0 ctx\
+    )\
+\
+\ul Slide\ulnone : Templates\
+- Use the Django Template language: http://goo.gl/JLvQp\
+- Balance of Power & Ease\
+- NOT python\
+- CAN access python objects, attributes, methods\
+- Filters: Modify Presentation\
+- Tags: Encapsulate arbitrary logic\
+- Inheritance\
+\
+\ul Slide\ulnone : Base Template: \
+minitweet/templates/base.html\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \
+<!DOCTYPE html>\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\b \cf4 <html>
+\f0\b0 \cf0 \
+
+\f1\b \cf4 <head>
+\f0\b0 \cf0 \
+    
+\f1\b \cf4 <title>
+\f0\b0 \cf0 \
+    \{% block title %\}\{% endblock %\}\
+    
+\f1\b \cf4 </title>
+\f0\b0 \cf0 \
+
+\f1\b \cf4 </head>
+\f0\b0 \cf0 \
+
+\f1\b \cf4 <body>
+\f0\b0 \cf0 \
+    \{% block content %\}\{% endblock %\}\
+
+\f1\b \cf4 </body>
+\f0\b0 \cf0 \
+
+\f1\b \cf4 </html>
+\f0\b0 \cf0 \
+\
+\
+\ul Slide\ulnone : App templates\
+minitweet/tweets/templates/tweets/\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \{%\cf0  
+\f1\b \cf4 extends
+\f0\b0 \cf0  \cf3 "base.html"\cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 title\cf0  \cf7 %\}\cf0 \
+Recent Tweets \
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 content\cf0  \cf7 %\}\cf0  \
+    <h1>Recent Tweets</h1>\
+    <ul>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 for
+\f0\b0 \cf0  \cf8 t\cf0  
+\f1\b \cf4 in
+\f0\b0 \cf0  \cf8 recent_tweets\cf0  \cf7 %\}\cf0 \
+        <li>\
+        \cf7 \{\{\cf0  \cf8 t.posted_by\cf0  \cf7 \}\}\cf0 <br/>\
+        \cf7 \{\{\cf0  \cf8 t.content\cf0  \cf7 \}\}\cf0 \
+        </li>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 endfor
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+    </ul>\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : User-tweets\
+\
+Feature #2: Tweets for a single user.\
+\
+\
+\ul Slide\ulnone : URLconf\
+\
+minitweet/tweets/urls.py\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.conf.urls.defaults
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  patterns, include, url\
+\
+urlpatterns \cf2 =\cf0  patterns(\cf3 'tweets.views'\cf0 ,\
+\
+    url(\cf3 r'^$'\cf0 , \
+        \cf3 'recent_tweets'\cf0 , \
+        name\cf2 =\cf3 'tweets-recent_tweets'\cf0 ),\
+\
+    url(\cf3 r'^(?P<username>.*)/$'\cf0 , \
+        \cf3 'user_tweets'\cf0 , \
+        name\cf2 =\cf3 'tweets-user_tweets'\cf0 ),\
+)\
+\
+\ul Slide\ulnone : views.py\
+\
+minitweet/tweets/views.py\
+\
+
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 user_tweets\cf0 (request, username):\
+    tweets \cf2 =\cf0  Tweet\cf2 .\cf0 objects\cf2 .\cf0 filter(posted_by__username\cf2 =\cf0 username)\
+\
+    template_data \cf2 =\cf0  \{\
+        \cf3 'tweets'\cf0 : tweets[:\cf2 10\cf0 ],\
+        \cf3 'username'\cf0 : username,\
+    \}\
+    template \cf2 =\cf0  \cf3 "tweets/user_tweets.html"\cf0 \
+    ctx \cf2 =\cf0  RequestContext(request)\
+\
+    
+\f1\b \cf4 return
+\f0\b0 \cf0  render_to_response(\
+        template, \
+        template_data, \
+        context_instance\cf2 =\cf0 ctx\
+    )\
+\
+\
+\ul Slide\ulnone : templates\
+\
+minitweet/tweets/templates/tweets/user_tweets.html\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \{%\cf0  
+\f1\b \cf4 extends
+\f0\b0 \cf0  \cf3 "base.html"\cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 title\cf0  \cf7 %\}\cf0 \
+ \cf7 \{\{\cf0  \cf8 username\cf0  \cf7 \}\}\cf0 's Tweets \
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 content\cf0  \cf7 %\}\cf0 \
+    <h1>\cf7 \{\{\cf0  \cf8 username\cf0  \cf7 \}\}\cf0 's Feed</h1>\
+    <ul>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 for
+\f0\b0 \cf0  \cf8 t\cf0  
+\f1\b \cf4 in
+\f0\b0 \cf0  \cf8 tweets\cf0  \cf7 %\}\cf0 \
+        <li>\
+        \cf7 \{\{\cf0  \cf8 t.content\cf0  \cf7 \}\}\cf0 <br/>\
+        <em>Posted \cf7 \{\{\cf0  \cf8 t.posted_on\cf2 |\cf5 timesince\cf0  \cf7 \}\}\cf0  ago</em>\
+        </li>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 endfor
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+    </ul>\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : try it out\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+{\field{\*\fldinst{HYPERLINK "http://localhost:8000/tweets/brad/"}}{\fldrslt \cf0 http://localhost:8000/tweets/brad/}}\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \
+\ul Slide\ulnone : Moving one\
+\
+	Feature #3: Posting tweets\
+\
+\ul Slide\ulnone : Url (add tweet)\
+minitweet/tweets/urls.py\
+\
+    url(\cf3 r'^add/$'\cf0 ,\
+        \cf3 'add_tweet'\cf0 , \
+        name\cf2 =\cf3 'tweets-add_tweet'\cf0 ),\
+    \
+\
+\ul Slide\ulnone : Form Classes\
+- Know how to generate HTML\
+- Forms: Validate Content\
+- ModelForms: Validate Content for a Model\
+	- also create instances of a Model\
+\
+\
+\ul Slide\ulnone : forms.py\
+minitweet/tweets/urls.py\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  forms\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 models
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  Tweet\
+\
+
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 TweetForm
+\f0\b0 \cf0 (forms\cf2 .\cf0 ModelForm):\
+    
+\f1\b \cf4 class
+\f0\b0 \cf0  
+\f1\b \cf5 Meta
+\f0\b0 \cf0 :\
+        model \cf2 =\cf0  Tweet \
+        fields \cf2 =\cf0  (\cf3 'content'\cf0 , )\
+\
+\ul Slide\ulnone : views.py\
+minitweet/tweets/views.py\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 # ...
+\f0\i0 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.core.urlresolvers
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  reverse\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 # ...
+\f0\i0 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.shortcuts
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  render_to_response, redirect\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 forms
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  TweetForm\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 # ...\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\i0 \cf0 \
+
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 add_tweet\cf0 (request):\
+\
+    
+\f1\b \cf4 if
+\f0\b0 \cf0  request\cf2 .\cf0 method \cf2 ==\cf0  \cf3 "POST"\cf0 :\
+        form \cf2 =\cf0  TweetForm(request\cf2 .\cf0 POST)\
+        
+\f1\b \cf4 if
+\f0\b0 \cf0  form\cf2 .\cf0 is_valid():\
+            tweet \cf2 =\cf0  form\cf2 .\cf0 save(commit\cf2 =\cf4 False\cf0 )\
+            tweet\cf2 .\cf0 posted_by \cf2 =\cf0  request\cf2 .\cf0 user\
+            tweet\cf2 .\cf0 save()\
+            url \cf2 =\cf0  reverse(\cf3 "tweets-user_tweets"\cf0 , args\cf2 =\cf0 [request\cf2 .\cf0 user])\
+            
+\f1\b \cf4 return
+\f0\b0 \cf0  redirect(url)\
+    
+\f1\b \cf4 else
+\f0\b0 \cf0 :\
+        form \cf2 =\cf0  TweetForm()\
+    \
+    template_data \cf2 =\cf0  \{\
+        \cf3 "form"\cf0 : form,\
+    \}\
+    template \cf2 =\cf0  \cf3 "tweets/add_tweet.html"\cf0 \
+    ctx \cf2 =\cf0  RequestContext(request)\
+\
+    
+\f1\b \cf4 return
+\f0\b0 \cf0  render_to_response(\
+        template, \
+        template_data, \
+        context_instance\cf2 =\cf0 ctx\
+    )\
+\
+\ul Slide\ulnone : add_tweet.html\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \{%\cf0  
+\f1\b \cf4 extends
+\f0\b0 \cf0  \cf3 "base.html"\cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 title\cf0  \cf7 %\}\cf0 \
+Add Tweet\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 content\cf0  \cf7 %\}\cf0  \
+    <h1>Add Tweet</h1>\
+    \
+    <form action="\cf7 \{%\cf0  
+\f1\b \cf4 url
+\f0\b0 \cf0  \cf8 tweets-add_tweet\cf0  \cf7 %\}\cf0 " method="post">\
+    \cf7 \{%\cf0  
+\f1\b \cf4 csrf_token
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+    \cf7 \{\{\cf0  \cf8 form.as_p\cf0  \cf7 \}\}\cf0  \
+    <p><input type="submit" value="Post Tweet!"/></p>\
+    </form>\
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Authentication\
+\
+Whoops! Make sure only logged-in users can tweet:\
+\
+
+\f1\b \cf4 from
+\f0\b0 \cf0  
+\f1\b \cf5 django.contrib.auth.decorators
+\f0\b0 \cf0  
+\f1\b \cf4 import
+\f0\b0 \cf0  login_required\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6 \
+# ...\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\i0 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf9 @login_required\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\b \cf4 def
+\f0\b0 \cf0  \cf5 add_tweet\cf0 (request):\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f2\i \cf6     # ...
+\f0\i0 \cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Enabling Authentication\
+- Use django's built-in auth app\
+- Already installed!\
+- All here: {\field{\*\fldinst{HYPERLINK "https://docs.djangoproject.com/en/1.3/topics/auth/"}}{\fldrslt https://docs.djangoproject.com/en/1.3/topics/auth/}}\
+\
+\ul Slide\ulnone : Add some settings:\
+\
+LOGIN_URL \cf2 =\cf0  \cf3 '/login/'\cf0 \
+LOGOUT_URL \cf2 =\cf0  \cf3 '/logout/'\cf0 \
+LOGIN_REDIRECT_URL \cf2 =\cf0  \cf3 '/tweets/'\cf0 \
+\
+\ul Slide\ulnone : Add some URLs\
+Edit minitweet/urls.py\
+\
+urlpatterns \cf2 =\cf0  patterns(\cf3 ''\cf0 ,\
+    url(\cf3 r'^login/$'\cf0 , \cf3 'django.contrib.auth.views.login'\cf0 , name\cf2 =\cf3 'login'\cf0 ),\
+    url(\cf3 r'^logout/$'\cf0 , \cf3 'django.contrib.auth.views.logout'\cf0 , name\cf2 =\cf3 'logout'\cf0 ),\
+    url(\cf3 r'^tweets/'\cf0 , include(\cf3 'tweets.urls'\cf0 )),\
+    url(\cf3 r'^admin/'\cf0 , include(admin\cf2 .\cf0 site\cf2 .\cf0 urls)),\
+)\
+\
+\ul Slide\ulnone : Add a login template\
+Edit minitweet/templates/registration/login.html\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \{%\cf0  
+\f1\b \cf4 extends
+\f0\b0 \cf0  \cf3 "base.html"\cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 title\cf0  \cf7 %\}\cf0 \
+Log In\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 content\cf0  \cf7 %\}\cf0  \
+    \cf7 \{%\cf0  
+\f1\b \cf4 if
+\f0\b0 \cf0  \cf8 user.is_authenticated\cf0  \cf7 %\}\cf0 \
+        <p>Welcome back, <strong>\cf7 \{\{\cf0  \cf8 user\cf0  \cf7 \}\}\cf0 </strong></p>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 else
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+        <form action="\cf7 \{%\cf0  
+\f1\b \cf4 url
+\f0\b0 \cf0  \cf8 login\cf0  \cf7 %\}\cf0 " method="post">\
+        \cf7 \{%\cf0  
+\f1\b \cf4 csrf_token
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+        \cf7 \{\{\cf0  \cf8 form.as_p\cf0  \cf7 \}\}\cf0  \
+        <p><input type="submit" value="Log In"/></p>\
+        </form>\
+    \cf7 \{%\cf0  
+\f1\b \cf4 endif
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Try it out!\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+{\field{\*\fldinst{HYPERLINK "http://localhost:8000/login/"}}{\fldrslt \cf0 http://localhost:8000/login/}}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Logging Out:\
+Edit minitweet/templates/registration/logged_out.html\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf7 \
+\{%\cf0  
+\f1\b \cf4 extends
+\f0\b0 \cf0  \cf3 "base.html"\cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 title\cf0  \cf7 %\}\cf0 \
+Logged Out\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\cf7 \{%\cf0  
+\f1\b \cf4 block
+\f0\b0 \cf0  \cf8 content\cf0  \cf7 %\}\cf0  \
+    <p>Good Bye!</p>\
+\cf7 \{%\cf0  
+\f1\b \cf4 endblock
+\f0\b0 \cf0  \cf7 %\}\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slide\ulnone : Try it out!\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+{\field{\*\fldinst{HYPERLINK "http://localhost:8000/login/"}}{\fldrslt \cf0 http://localhost:8000/logout/}}\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\cf0 \ul Slides\ulnone : Where next?\
+- https://docs.djangoproject.com/\
+- {\field{\*\fldinst{HYPERLINK "http://djangopackages.com/"}}{\fldrslt http://djangopackages.com/}}\
+- {\field{\*\fldinst{HYPERLINK "http://djangobook.com/en/2.0/"}}{\fldrslt http://djangobook.com/en/2.0/}} (a little dated)\
+- #django-users mailing list: {\field{\*\fldinst{HYPERLINK "https://groups.google.com/forum/#!forum/django-users"}}{\fldrslt https://groups.google.com/forum/#!forum/django-users}}\
+- #django on irc\
+\
+\
+}

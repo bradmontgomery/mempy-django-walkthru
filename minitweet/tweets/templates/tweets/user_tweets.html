@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+ {{ username }}'s Tweets 
+{% endblock %}
+
+{% block content %}
+    <h1>{{ username }}'s Feed</h1>
+    <ul>
+    {% for t in tweets %}
+        <li>
+        {{ t.content }}<br/>
+        <em>Posted {{ t.posted_on|timesince }} ago</em>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
